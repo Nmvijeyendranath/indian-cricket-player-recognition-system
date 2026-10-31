@@ -1,0 +1,543 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0057B8">
+  <title>India XI · Identify the Legends · Cricket AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="bcci-logo.png">
+  <link rel="apple-touch-icon" href="bcci-logo.png">
+  <link rel="stylesheet" href="styles.css?v=10.0">
+</head>
+<body>
+  <!-- Scroll Reading Progress Bar -->
+  <div class="scroll-progress-bar" id="scrollProgressBar" aria-hidden="true"></div>
+
+  <!-- Tricolor Accent Stripe -->
+  <div class="flag-stripe" aria-hidden="true"></div>
+
+  <!-- Dharamshala HPCA Stadium Cinematic Background Layer -->
+  <div class="stadium-backdrop" aria-hidden="true">
+    <div class="stadium-bg-image" id="stadiumBgImage"></div>
+    <div class="stadium-gradient-overlay"></div>
+    <div class="stadium-ambient-mesh"></div>
+    <div class="stadium-light-beam light-left"></div>
+    <div class="stadium-light-beam light-right"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="India XI home">
+      <div class="brand-logo-wrap">
+        <img src="bcci-logo.png" alt="BCCI Official Logo" class="brand-logo-img">
+      </div>
+      <span class="brand-copy">
+        <b>INDIA XI</b>
+        <small>CRICKET INTELLIGENCE · AI SUITE</small>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a class="selected" href="#top">IDENTIFY</a>
+      <button type="button" class="nav-db-btn" onclick="openDatabaseModal()">🗂 ROSTER (323)</button>
+      <a href="#analytics">ANALYTICS</a>
+      <a href="#reportsShowcase">REPORTS</a>
+      <a href="#how-it-works">HOW IT WORKS</a>
+    </nav>
+    <span class="system-status" id="systemStatus">
+      <i></i> RECOGNITION SYSTEM READY
+    </span>
+  </header>
+
+  <main id="top">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="eyebrow">
+        <img src="bcci-logo.png" alt="BCCI Official Emblem" class="eyebrow-logo">
+        <span class="mini-flag"><i></i><i></i><i></i></span>
+        A TRIBUTE TO THE MEN IN BLUE
+        <span class="eyebrow-dot">&#x2022;</span>
+        PRODUCTION AI FACE IDENTIFICATION
+      </div>
+
+      <h1>IDENTIFY THE <span>LEGENDS</span></h1>
+      <p class="subtitle">AI-Powered Indian Cricket Player Recognition</p>
+      <p class="intro">
+        Every face has a story. Bring the legends of Indian cricket into sharp focus with a single photo, powered by deep ArcFace metric representations, calibrated SVM classification, and accelerated on NVIDIA RTX hardware.
+      </p>
+
+      <!-- Key Architecture Metrics with 3D Depth -->
+      <div class="hero-kpis">
+        <div class="hero-kpi-pill tilt-card">
+          <span class="hero-kpi-val">323</span>
+          <span class="hero-kpi-label">Registered Cricketers</span>
+        </div>
+        <div class="hero-kpi-pill tilt-card">
+          <span class="hero-kpi-val">512D</span>
+          <span class="hero-kpi-label">ArcFace ResNet-50</span>
+        </div>
+        <div class="hero-kpi-pill tilt-card">
+          <span class="hero-kpi-val">SVM</span>
+          <span class="hero-kpi-label">Calibrated Classifier</span>
+        </div>
+        <div class="hero-kpi-pill tilt-card">
+          <span class="hero-kpi-val">GPU</span>
+          <span class="hero-kpi-label">NVIDIA RTX Acceleration</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recognition Studio Layout (2-Column Centerpiece) -->
+    <section class="recognition-layout" aria-label="Player identification">
+      <!-- Step 01: Upload Card -->
+      <div class="upload-card tilt-card" id="uploadContainer">
+        <div class="card-heading">
+          <div>
+            <span class="step-number">01</span>
+            <span class="section-title">Upload a Player Photo</span>
+          </div>
+          <span class="format-pill">JPG · PNG · WEBP</span>
+        </div>
+
+        <!-- Quick 1-Click Test Selector -->
+        <div class="sample-chips">
+          <span class="sample-chips-label">⚡ Quick Test:</span>
+          <button type="button" class="chip-btn" onclick="loadQuickSample('Virat Kohli')">Virat Kohli</button>
+          <button type="button" class="chip-btn" onclick="loadQuickSample('Rohit Sharma')">Rohit Sharma</button>
+          <button type="button" class="chip-btn" onclick="loadQuickSample('M.S. Dhoni')">M.S. Dhoni</button>
+          <button type="button" class="chip-btn" onclick="loadQuickSample('Sachin Tendulkar')">Sachin Tendulkar</button>
+          <button type="button" class="chip-btn" onclick="loadQuickSample('Jasprit Bumrah')">Jasprit Bumrah</button>
+        </div>
+
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose or drop a player image">
+          <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+          
+          <div class="empty-state" id="emptyState">
+            <div class="cricket-upload-icon" aria-hidden="true">
+              <img src="bcci-logo.png" alt="BCCI Official Emblem" class="dropzone-logo-icon">
+              <span class="icon-plus">+</span>
+            </div>
+            <h2>Bring a Legend into Focus</h2>
+            <p>Drag and drop a cricket photo here, or select from your device</p>
+            <button type="button" class="choose-button" id="chooseButton">
+              <span>＋</span> CHOOSE IMAGE
+            </button>
+            <small class="file-hint">Clear, front-facing photos work best · Up to 12 MB</small>
+          </div>
+
+          <div class="selected-state" id="selectedState" hidden>
+            <div class="preview-frame" id="previewFrame">
+              <img id="imagePreview" alt="Selected player photo preview">
+              <span class="scan-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+              <span class="scan-line" aria-hidden="true"></span>
+              <div class="scan-reticle" aria-hidden="true"></div>
+            </div>
+            <div class="selected-meta">
+              <span class="photo-check">✓</span>
+              <span id="selectedName">Image ready</span>
+            </div>
+            <div class="photo-controls">
+              <button type="button" class="text-control" id="replaceButton">↻ Replace image</button>
+              <span></span>
+              <button type="button" class="text-control remove-control" id="removeButton">Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="upload-footer">
+          <span><i class="secure-dot"></i> ON-PREMISE INFERENCE</span>
+          <span>FORMATS: JPG, PNG, WEBP</span>
+        </div>
+
+        <button class="identify-button" id="identifyButton" type="button" disabled>
+          <span class="button-spark">✦</span>
+          <span class="button-label">IDENTIFY PLAYER</span>
+          <span class="button-arrow">→</span>
+        </button>
+        <p class="integration-note" id="integrationNote">Select an image to start recognition</p>
+      </div>
+
+      <!-- Step 02: Result Card -->
+      <aside class="result-card tilt-card" id="resultCard" aria-live="polite">
+        <div class="card-heading result-heading">
+          <div>
+            <span class="step-number">02</span>
+            <span class="section-title">Recognition Result</span>
+          </div>
+          <span class="result-status" id="resultStatus">
+            <i></i> AWAITING PHOTO
+          </span>
+        </div>
+
+        <div class="result-body" id="resultBody">
+          <!-- State: Waiting -->
+          <div class="waiting-state" id="waitingState">
+            <div class="result-emblem">
+              <img src="bcci-logo.png" alt="BCCI Official Emblem" class="result-emblem-logo">
+            </div>
+            <h2>Ready When You Are</h2>
+            <p>Your player match will appear here, complete with their identity, confidence score, and candidate rankings.</p>
+            <div class="result-ornament"><span></span><i>INDIA XI</i><span></span></div>
+          </div>
+
+          <!-- State: Loading / Analyzing with 3D Rings -->
+          <div class="loading-state" id="loadingState" hidden>
+            <div class="loader-ring">
+              <img src="bcci-logo.png" alt="BCCI Official Emblem" class="loader-logo-center">
+              <span></span>
+              <i></i>
+            </div>
+            <h2>Reading the Game</h2>
+            <p>Extracting 512D facial embeddings and classifying against 323 cricketers…</p>
+            <div class="loading-track"><i></i></div>
+            <small>ANALYSING FACIAL TOPOLOGY</small>
+          </div>
+
+          <!-- State: Match Found -->
+          <div class="match-state" id="matchState" hidden>
+            <div class="match-image-wrap">
+              <img id="resultImage" alt="Identified player">
+              <span class="match-ribbon"><div class="ribbon-logo logo-3d" style="background-image: url('bcci-logo.png');" aria-label="BCCI Logo"></div> OFFICIAL PLAYER MATCH</span>
+            </div>
+            <div class="match-copy">
+              <span class="result-kicker">THE LEGEND IS</span>
+              <h2 id="playerName">Player name</h2>
+              <p id="playerDetail">India · International cricketer</p>
+              
+              <div class="confidence-row">
+                <span>CONFIDENCE</span>
+                <b id="confidenceValue">—%</b>
+              </div>
+              <div class="confidence-track"><i id="confidenceBar"></i></div>
+
+              <!-- Top Candidate Predictions -->
+              <div class="candidates-wrap" id="candidatesWrap" hidden>
+                <div class="candidates-title">
+                  <span>Top Candidate Predictions</span>
+                  <span id="matchVerdictBadge" style="color:var(--green); font-weight:800;">VERIFIED MATCH</span>
+                </div>
+                <div id="candidatesList"></div>
+              </div>
+
+              <!-- Telemetry -->
+              <div class="telemetry-row" id="telemetryRow">
+                <span class="telemetry-pill" id="telemetryLatency">⚡ --ms</span>
+                <span class="telemetry-pill" id="telemetryThreshold">🎯 Rejection τ: 10%</span>
+                <span class="telemetry-pill" id="telemetryDevice">🚀 RTX GPU</span>
+              </div>
+            </div>
+            <div class="result-actions">
+              <button type="button" class="text-control" id="identifyAnother">↻ Identify another photo</button>
+            </div>
+          </div>
+
+          <!-- State: Unknown Face / Rejected -->
+          <div class="unknown-state" id="unknownState" hidden>
+            <div class="unknown-icon">?</div>
+            <span class="result-kicker">NO CONFIDENT MATCH</span>
+            <h2>Legend Not Found</h2>
+            <p id="unknownMessage">We couldn't confidently match this photo to a registered player above the threshold. Try a clearer, front-facing image.</p>
+            <button type="button" class="text-control" id="retryButton">↻ Try another photo</button>
+          </div>
+
+          <!-- State: Error -->
+          <div class="error-state" id="errorState" hidden>
+            <div class="unknown-icon">!</div>
+            <h2>Couldn't Identify Image</h2>
+            <p id="errorMessage">Please try again in a moment.</p>
+            <button type="button" class="text-control" id="errorRetryButton">↻ Try again</button>
+          </div>
+        </div>
+
+        <div class="result-footer">
+          <span class="mini-flag"><i></i><i></i><i></i></span>
+          <span>CELEBRATING INDIA'S CRICKETING GREATS</span>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Section: Analytics & ML Architecture -->
+    <section class="analytics-section reveal-3d" id="analytics">
+      <div class="section-header">
+        <div class="eyebrow">
+          <img src="bcci-logo.png" alt="BCCI Official Emblem" class="eyebrow-logo">
+          <span class="mini-flag"><i></i><i></i><i></i></span> DEEP METRIC LEARNING PIPELINE
+        </div>
+        <h2>ARCHITECTURE & BENCHMARK ANALYTICS</h2>
+        <p>Production face identification architecture combining ArcFace deep metric embeddings with calibrated Linear SVM classification.</p>
+      </div>
+
+      <!-- 5-Node Pipeline Flow with 3D Depth -->
+      <div class="pipeline-flow">
+        <div class="pipeline-node tilt-card">
+          <div class="node-step">01</div>
+          <div class="node-title">Face Detection</div>
+          <div class="node-desc">RetinaFace detector extracts single facial bounding box and 5 landmark coordinates.</div>
+        </div>
+        <div class="pipeline-node tilt-card">
+          <div class="node-step">02</div>
+          <div class="node-title">Alignment</div>
+          <div class="node-desc">Affine landmark similarity alignment standardizes rotation, scale, and crop.</div>
+        </div>
+        <div class="pipeline-node tilt-card">
+          <div class="node-step">03</div>
+          <div class="node-title">ArcFace CNN</div>
+          <div class="node-desc">Pretrained ResNet-50 extracts 512-dimensional hyperspherical facial embeddings.</div>
+        </div>
+        <div class="pipeline-node tilt-card">
+          <div class="node-step">04</div>
+          <div class="node-title">L2 Normalization</div>
+          <div class="node-desc">Embeddings projected onto the unit hypersphere surface for cosine distance comparison.</div>
+        </div>
+        <div class="pipeline-node tilt-card">
+          <div class="node-step">05</div>
+          <div class="node-title">Calibrated SVM</div>
+          <div class="node-desc">Linear SVM predicts player identity with calibrated confidence and threshold rejection (&tau;=0.10).</div>
+        </div>
+      </div>
+
+      <!-- Analytics Stats -->
+      <div class="analytics-grid">
+        <div class="stat-box tilt-card">
+          <div class="stat-val">98.4%</div>
+          <div class="stat-label">Top-1 Accuracy</div>
+          <div class="stat-sub">ArcFace + Linear SVM</div>
+        </div>
+        <div class="stat-box tilt-card">
+          <div class="stat-val">98.1%</div>
+          <div class="stat-label">Macro F1 Score</div>
+          <div class="stat-sub">Across 323 Classes</div>
+        </div>
+        <div class="stat-box tilt-card">
+          <div class="stat-val">28ms</div>
+          <div class="stat-label">Mean Latency</div>
+          <div class="stat-sub">RTX GPU Accelerated</div>
+        </div>
+        <div class="stat-box tilt-card">
+          <div class="stat-val">323</div>
+          <div class="stat-label">Classes Trained</div>
+          <div class="stat-sub">7,687 Total Images</div>
+        </div>
+      </div>
+
+      <!-- EMBEDDED EVALUATION REPORTS SHOWCASE (Directly Visible on Page) -->
+      <div class="reports-showcase-wrap reveal-3d" id="reportsShowcase">
+        <div class="reports-showcase-header">
+          <div>
+            <div class="reports-eyebrow">
+              <img src="bcci-logo.png" alt="BCCI Official Emblem" class="eyebrow-logo">
+              <span>VERIFIED EVALUATION ARTIFACTS</span>
+            </div>
+            <h3 class="reports-heading">EMBEDDED PERFORMANCE REPORTS & DIAGNOSTICS</h3>
+            <p class="reports-subheading">Comprehensive visual proof of model accuracy, cross-entropy convergence, confusion matrix, and calibrated rejection bounds. Click any report to inspect in full HD.</p>
+          </div>
+          <div class="report-filters" id="reportFilters">
+            <button type="button" class="report-filter-btn active" data-filter="all">All Reports (4)</button>
+            <button type="button" class="report-filter-btn" data-filter="architecture">Architecture</button>
+            <button type="button" class="report-filter-btn" data-filter="confusion">Confusion Matrix</button>
+            <button type="button" class="report-filter-btn" data-filter="confidence">Confidence</button>
+            <button type="button" class="report-filter-btn" data-filter="training">Training Curves</button>
+          </div>
+        </div>
+
+        <div class="reports-grid" id="reportsGrid">
+          <!-- Report Card 1: Architecture Comparison -->
+          <div class="report-card tilt-card" data-category="architecture">
+            <div class="report-card-top">
+              <span class="report-tag"><img src="bcci-logo.png" alt="BCCI" class="report-mini-logo"> REPORT 01</span>
+              <span class="report-chip-metric">98.4% vs. 62.5%</span>
+            </div>
+            <div class="report-card-media" onclick="openReportModal('/reports/architecture_comparison.png', 'Architecture Comparison: ArcFace + SVM vs. Baseline', 'ArcFace metric embeddings + Linear SVM achieved 98.4% Top-1 accuracy with 28ms latency, significantly outperforming the EfficientNet-B0 cross-entropy baseline (62.5%).')">
+              <img src="/reports/architecture_comparison.png" alt="Architecture Comparison Report" loading="lazy">
+              <div class="report-hover-overlay">
+                <span class="zoom-icon">🔍</span>
+                <span>Click to Expand Fullscreen</span>
+              </div>
+            </div>
+            <div class="report-card-content">
+              <h4>📊 Architecture Comparison</h4>
+              <p>Direct benchmark comparing pretrained ArcFace ResNet-50 hypersphere embeddings with the EfficientNet-B0 transfer-learning baseline across 323 identities.</p>
+              <div class="report-card-actions">
+                <button type="button" class="btn-inspect" onclick="openReportModal('/reports/architecture_comparison.png', 'Architecture Comparison: ArcFace + SVM vs. Baseline', 'ArcFace metric embeddings + Linear SVM achieved 98.4% Top-1 accuracy with 28ms latency, significantly outperforming the EfficientNet-B0 cross-entropy baseline (62.5%).')">🔍 Inspect Full HD</button>
+                <a href="/reports/architecture_comparison.png" target="_blank" download class="btn-dl" title="Download High-Res PNG">📥</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Report Card 2: Top-20 Confusion Matrix -->
+          <div class="report-card tilt-card" data-category="confusion">
+            <div class="report-card-top">
+              <span class="report-tag"><img src="bcci-logo.png" alt="BCCI" class="report-mini-logo"> REPORT 02</span>
+              <span class="report-chip-metric">99.1% Precision</span>
+            </div>
+            <div class="report-card-media" onclick="openReportModal('/reports/confusion_matrix_top20.png', 'Top-20 Indian Cricketers Confusion Matrix', 'Evaluation on the 20 most frequent players reveals razor-sharp diagonal alignment with zero confusion between closely matched teammates.')">
+              <img src="/reports/confusion_matrix_top20.png" alt="Top-20 Confusion Matrix" loading="lazy">
+              <div class="report-hover-overlay">
+                <span class="zoom-icon">🔍</span>
+                <span>Click to Expand Fullscreen</span>
+              </div>
+            </div>
+            <div class="report-card-content">
+              <h4>🎯 Top-20 Confusion Matrix</h4>
+              <p>Per-class classification discrimination matrix across India's marquee legends (Virat Kohli, Rohit Sharma, MS Dhoni, Sachin Tendulkar, Jasprit Bumrah, etc.).</p>
+              <div class="report-card-actions">
+                <button type="button" class="btn-inspect" onclick="openReportModal('/reports/confusion_matrix_top20.png', 'Top-20 Indian Cricketers Confusion Matrix', 'Evaluation on the 20 most frequent players reveals razor-sharp diagonal alignment with zero confusion between closely matched teammates.')">🔍 Inspect Full HD</button>
+                <a href="/reports/confusion_matrix_top20.png" target="_blank" download class="btn-dl" title="Download High-Res PNG">📥</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Report Card 3: Confidence Distribution -->
+          <div class="report-card tilt-card" data-category="confidence">
+            <div class="report-card-top">
+              <span class="report-tag"><img src="bcci-logo.png" alt="BCCI" class="report-mini-logo"> REPORT 03</span>
+              <span class="report-chip-metric">Threshold &tau; = 0.10</span>
+            </div>
+            <div class="report-card-media" onclick="openReportModal('/reports/confidence_distribution.png', 'Prediction Confidence Distribution & Unknown Rejection', 'Empirical distribution showing clear separation: verified players cluster at high probability, while impostors and unknown faces fall cleanly below 0.10.')">
+              <img src="/reports/confidence_distribution.png" alt="Confidence Distribution & Unknown Rejection" loading="lazy">
+              <div class="report-hover-overlay">
+                <span class="zoom-icon">🔍</span>
+                <span>Click to Expand Fullscreen</span>
+              </div>
+            </div>
+            <div class="report-card-content">
+              <h4>📈 Confidence Distribution</h4>
+              <p>Distribution of softmax decision probabilities demonstrating robust unknown-person rejection and separation between true positive matches and unassigned individuals.</p>
+              <div class="report-card-actions">
+                <button type="button" class="btn-inspect" onclick="openReportModal('/reports/confidence_distribution.png', 'Prediction Confidence Distribution & Unknown Rejection', 'Empirical distribution showing clear separation: verified players cluster at high probability, while impostors and unknown faces fall cleanly below 0.10.')">🔍 Inspect Full HD</button>
+                <a href="/reports/confidence_distribution.png" target="_blank" download class="btn-dl" title="Download High-Res PNG">📥</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Report Card 4: Training Curves -->
+          <div class="report-card tilt-card" data-category="training">
+            <div class="report-card-top">
+              <span class="report-tag"><img src="bcci-logo.png" alt="BCCI" class="report-mini-logo"> REPORT 04</span>
+              <span class="report-chip-metric">Loss & Convergence</span>
+            </div>
+            <div class="report-card-media" onclick="openReportModal('/reports/efficientnet_training_curves.png', 'EfficientNet Baseline Training & Validation Curves', 'Training history over 15 epochs on NVIDIA RTX GPU hardware illustrating loss convergence and validation learning curves.')">
+              <img src="/reports/efficientnet_training_curves.png" alt="Training & Validation Curves" loading="lazy">
+              <div class="report-hover-overlay">
+                <span class="zoom-icon">🔍</span>
+                <span>Click to Expand Fullscreen</span>
+              </div>
+            </div>
+            <div class="report-card-content">
+              <h4>📉 Training Curves</h4>
+              <p>Epoch-by-epoch training and validation loss progression, highlighting optimization dynamics on GPU hardware with cosine annealing learning rate.</p>
+              <div class="report-card-actions">
+                <button type="button" class="btn-inspect" onclick="openReportModal('/reports/efficientnet_training_curves.png', 'EfficientNet Baseline Training & Validation Curves', 'Training history over 15 epochs on NVIDIA RTX GPU hardware illustrating loss convergence and validation learning curves.')">🔍 Inspect Full HD</button>
+                <a href="/reports/efficientnet_training_curves.png" target="_blank" download class="btn-dl" title="Download High-Res PNG">📥</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how reveal-3d" id="how-it-works">
+      <div class="how-title"><span class="mini-flag"><i></i><i></i><i></i></span> MADE FOR THE LOVE OF THE GAME</div>
+      <div class="how-grid">
+        <article class="tilt-card">
+          <span class="how-icon">01</span>
+          <div>
+            <b>Choose a Photo</b>
+            <p>Upload a clear image of an Indian cricket player or pick one from the quick test list.</p>
+          </div>
+        </article>
+        <article class="tilt-card">
+          <span class="how-icon">02</span>
+          <div>
+            <b>Let AI Take a Look</b>
+            <p>ArcFace 512D deep embeddings and calibrated SVM classify the face against 323 identities.</p>
+          </div>
+        </article>
+        <article class="tilt-card">
+          <span class="how-icon">03</span>
+          <div>
+            <b>Meet the Legend</b>
+            <p>Instantly see the predicted player, confidence score, and top candidate rankings.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-brand">
+        <img src="bcci-logo.png" alt="BCCI Official Emblem" class="footer-logo">
+        <div>
+          <b>INDIA XI · CRICKET INTELLIGENCE</b>
+          <small>OFFICIAL FACIAL RECOGNITION SUITE · 323 PLAYERS</small>
+        </div>
+      </div>
+      <span>ONE GAME. A MILLION MEMORIES.</span>
+    </footer>
+  </main>
+
+  <!-- High-Res Report Inspection Lightbox Modal -->
+  <div class="report-lightbox" id="reportLightbox" aria-hidden="true" role="dialog">
+    <div class="lightbox-backdrop" onclick="closeReportModal()"></div>
+    <div class="lightbox-dialog tilt-card">
+      <div class="lightbox-header">
+        <div>
+          <span class="lightbox-badge">HD REPORT INSPECTION</span>
+          <h3 id="lightboxTitle">Report Title</h3>
+        </div>
+        <button type="button" class="lightbox-close" onclick="closeReportModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="lightbox-body">
+        <div class="lightbox-img-wrap">
+          <img id="lightboxImg" src="" alt="Report Inspection View">
+        </div>
+        <div class="lightbox-footer">
+          <p id="lightboxCaption">Report description</p>
+          <div class="lightbox-actions">
+            <a id="lightboxDlBtn" href="" target="_blank" download class="btn-download-modal">
+              📥 Download Report Asset
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=10.0"></script>
+
+    <!-- ============================================================
+         FULL DATABASE MODAL (separate page overlay, own scroll)
+         ============================================================ -->
+    <div class="db-modal-overlay" id="dbModalOverlay" aria-hidden="true" role="dialog" aria-label="Player Photo Database">
+      <div class="db-modal-panel">
+        <!-- Header -->
+        <div class="db-modal-header">
+          <div class="db-modal-title-row">
+            <img src="bcci-logo.png" alt="BCCI" class="db-modal-logo">
+            <div>
+              <div class="db-modal-eyebrow">COMPLETE PHOTO DATABASE</div>
+              <h2 class="db-modal-heading">323 INDIAN CRICKETERS</h2>
+            </div>
+          </div>
+          <button type="button" class="db-modal-close" onclick="closeDatabaseModal()" aria-label="Close database">&times;</button>
+        </div>
+
+        <!-- Search + Alphabet filter -->
+        <div class="db-modal-controls">
+          <div class="roster-search-wrap db-search-wrap">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" id="dbSearch" class="roster-search-input" placeholder="Search by name (e.g. Virat, Dhoni, Sachin)...">
+          </div>
+          <div class="alphabet-filter" id="dbAlphabetFilter"></div>
+        </div>
+
+        <!-- Photo grid (only rendered when modal opens) -->
+        <div class="db-photo-grid" id="dbPhotoGrid">
+          <div class="db-loading">Loading database...</div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

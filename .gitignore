@@ -1,0 +1,24 @@
+# Environment & dependencies
+.env
+.venv/
+env/
+venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+
+# Large dataset images (770MB)
+data/archive (3)/
+data/images/*
+!data/images/.gitkeep
+
+# Model binaries (83MB)
+models/*.joblib
+models/*.pt
+!models/.gitkeep
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

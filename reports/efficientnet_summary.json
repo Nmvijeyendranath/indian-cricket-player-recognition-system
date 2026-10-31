@@ -1,0 +1,11 @@
+{
+  "model": "EfficientNet-B0",
+  "train_samples": 5215,
+  "val_samples": 1208,
+  "test_samples": 1208,
+  "num_classes": 323,
+  "test_top1_accuracy": 0.1423841059602649,
+  "test_top3_accuracy": 0.23096026490066227,
+  "inference_ms_per_image": 14.66168552045001,
+  "device": "cuda"
+}
