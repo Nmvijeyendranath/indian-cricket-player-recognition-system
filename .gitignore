@@ -13,7 +13,7 @@ data/images/*
 !data/images/.gitkeep
 
 # Model binaries (83MB)
-models/*.joblib
+models/*.joblib`n!models/face_index.joblib
 models/*.pt
 !models/.gitkeep
 
