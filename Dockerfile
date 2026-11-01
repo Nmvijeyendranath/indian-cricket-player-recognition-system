@@ -25,8 +25,8 @@ RUN pip install --no-cache-dir -r requirements-prod.txt && \
     pip uninstall -y opencv-python opencv-python-headless && \
     pip install --no-cache-dir opencv-python-headless
 
-# Pre-download InsightFace buffalo_l models into the image so container starts instantly
-RUN python -c "from insightface.app import FaceAnalysis; FaceAnalysis(name='buffalo_l', allowed_modules=['detection', 'recognition'])"
+# Pre-download and bake InsightFace buffalo_l models into image so container starts instantly without network calls
+RUN python -c "from insightface.app import FaceAnalysis; app = FaceAnalysis(name='buffalo_l', allowed_modules=['detection', 'recognition']); app.prepare(ctx_id=-1, det_size=(640, 640))"
 
 # Copy source code, model weights, and frontend assets
 COPY app/ ./app/

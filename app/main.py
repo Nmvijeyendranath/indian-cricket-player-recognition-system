@@ -27,6 +27,16 @@ app.add_middleware(
 service = FaceService()
 
 
+@app.on_event('startup')
+def startup_event():
+    """Warm up classifier and InsightFace embedder so the first request is fast."""
+    try:
+        _ = service.classifier
+        _ = service.embedder
+    except Exception as e:
+        print(f'Startup model loading warning: {e}')
+
+
 @app.get('/health')
 def health():
     """Health check and model status."""
@@ -34,7 +44,7 @@ def health():
 
 
 @app.post('/identify')
-async def identify(file: UploadFile = File(...), top_k: int = TOP_K):
+def identify(file: UploadFile = File(...), top_k: int = TOP_K):
     """
     Identify cricket player from an uploaded facial image.
     Rejects images with no face, multiple faces, or confidence below calibrated threshold.
@@ -42,7 +52,7 @@ async def identify(file: UploadFile = File(...), top_k: int = TOP_K):
     if not 1 <= top_k <= 20:
         raise HTTPException(status_code=400, detail='top_k must be between 1 and 20')
 
-    data = await file.read(MAX_UPLOAD_MB * 1024 * 1024 + 1)
+    data = file.file.read(MAX_UPLOAD_MB * 1024 * 1024 + 1)
     if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
         raise HTTPException(status_code=413, detail='Image exceeds upload limit (12MB)')
 
