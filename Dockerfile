@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrender1 \
     libsm6 \
     curl \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Install production Python dependencies
@@ -25,8 +26,11 @@ RUN pip install --no-cache-dir -r requirements-prod.txt && \
     pip uninstall -y opencv-python opencv-python-headless && \
     pip install --no-cache-dir opencv-python-headless
 
-# Pre-download and bake InsightFace buffalo_l models into image so container starts instantly without network calls
-RUN python -c "from insightface.app import FaceAnalysis; app = FaceAnalysis(name='buffalo_l', allowed_modules=['detection', 'recognition']); app.prepare(ctx_id=-1, det_size=(640, 640))"
+# Download official InsightFace buffalo_l models directly from GitHub releases
+RUN mkdir -p /root/.insightface/models/buffalo_l && \
+    curl -L https://github.com/deepinsight/insightface/releases/download/v0.7/buffalo_l.zip -o /tmp/buffalo_l.zip && \
+    unzip -q -o /tmp/buffalo_l.zip -d /root/.insightface/models/buffalo_l && \
+    rm /tmp/buffalo_l.zip
 
 # Copy source code, model weights, and frontend assets
 COPY app/ ./app/
