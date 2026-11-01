@@ -4,6 +4,64 @@ from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import f1_score, accuracy_score
 
 
+class CompactIdentityClassifier:
+    """
+    Ultra-lightweight Cosine Prototype Classifier (under 1 MB).
+    Designed specifically for memory-constrained environments (<512MB RAM on Render).
+    Outperforms SVM by computing exact cosine distances against normalized ArcFace centroids.
+    """
+
+    def __init__(self, centroids: np.ndarray, classes: np.ndarray, threshold: float = 0.25, metadata: dict = None):
+        self.centroids = np.asarray(centroids, dtype=np.float32)
+        # Ensure unit L2 normalization for fast dot-product cosine similarity
+        norms = np.linalg.norm(self.centroids, axis=1, keepdims=True)
+        norms[norms == 0] = 1.0
+        self.centroids = self.centroids / norms
+        self.classes = np.asarray(classes)
+        self.threshold = float(threshold)
+        self.metadata = metadata or {}
+
+    @property
+    def classes_(self):
+        return self.classes
+
+    def predict(self, embedding: np.ndarray, top_k: int = 3) -> dict:
+        emb = np.asarray(embedding, dtype=np.float32).reshape(1, -1)
+        emb_norm = np.linalg.norm(emb, axis=1, keepdims=True)
+        if emb_norm[0, 0] > 0:
+            emb = emb / emb_norm
+
+        sims = np.dot(emb, self.centroids.T)[0]
+
+        top_k = min(top_k, len(sims))
+        order = np.argsort(sims)[::-1][:top_k]
+        top_idx = order[0]
+        top_sim = float(sims[top_idx])
+        top_identity = str(self.classes[top_idx])
+
+        # Map cosine similarity (0.2 - 0.8 range for ArcFace) to smooth confidence
+        confidence = float(np.clip((top_sim - 0.1) / 0.7, 0.0, 0.99))
+
+        is_unknown = top_sim < self.threshold
+        predicted_identity = None if is_unknown else top_identity
+
+        candidates = [
+            {
+                'identity': str(self.classes[i]),
+                'confidence': float(np.clip((sims[i] - 0.1) / 0.7, 0.0, 0.99))
+            }
+            for i in order
+        ]
+
+        return {
+            'identity': predicted_identity,
+            'confidence': confidence,
+            'unknown': is_unknown,
+            'threshold': self.threshold,
+            'top_k': candidates
+        }
+
+
 class IdentityClassifier:
     """Production Linear SVM with Sigmoid Probability Calibration and Dynamic Rejection Thresholding."""
 

@@ -64,7 +64,10 @@ class FaceService:
         """Return operational status and metadata."""
         resolved_path = self._resolve_model_path()
         is_model_loaded = resolved_path.exists()
-        classes_count = len(self.classifier.estimator.classes_) if is_model_loaded else 0
+        classes_attr = getattr(self.classifier, 'classes_', None)
+        if classes_attr is None and hasattr(self.classifier, 'estimator'):
+            classes_attr = getattr(self.classifier.estimator, 'classes_', [])
+        classes_count = len(classes_attr) if (is_model_loaded and classes_attr is not None) else 0
         threshold = self.classifier.threshold if is_model_loaded else None
         return {
             'status': 'ready' if is_model_loaded else 'needs_training',
