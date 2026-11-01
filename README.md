@@ -1,3 +1,12 @@
+---
+title: Indian Cricket Player Face Recognition
+emoji: 🏏
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+---
+
 # Indian Cricket Team Member Face Identification
 
 Production-quality facial identification system for 323 Indian cricket players using pretrained **ArcFace (buffalo_l)** embeddings with a **Calibrated Linear Support Vector Machine (SVM)** and **confidence-based unknown-person rejection**, optimized for GPU hardware acceleration and streaming chunked data processing.
