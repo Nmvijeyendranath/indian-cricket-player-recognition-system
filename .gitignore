@@ -12,9 +12,13 @@ data/archive (3)/
 data/images/*
 !data/images/.gitkeep
 
-# Model binaries (83MB)
-models/*.joblib`n!models/face_index.joblib
+# Model binaries - ship only production artefacts, exclude training binaries
+models/*.joblib
+!models/face_index.joblib
 models/*.pt
+models/*.onnx
+!models/det_10g_int8.onnx
+!models/w600k_r50_int8.onnx
 !models/.gitkeep
 
 # OS & Editor
